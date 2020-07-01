@@ -1,6 +1,7 @@
 import React from 'react'
 import {Button, StyleSheet, TextInput, KeyboardAvoidingView} from 'react-native'
 import Constants from 'expo-constants'
+import PropTypes from 'prop-types'
 
 const styles = StyleSheet.create({
   container: {
@@ -24,6 +25,8 @@ const styles = StyleSheet.create({
 export default class AddContactForm extends React.Component {
   state = {
     name: '',
+    firstName: '',
+    lastName: '',
     phone: '',
     isFormValid: false,
   }
@@ -34,8 +37,11 @@ export default class AddContactForm extends React.Component {
     }
   }
 
-  handleNameChange = name => {
-    this.setState({name})
+  onNameChange = key => val => {
+    this.setState({[key]: val});
+    this.setState((state) => ({
+      name: state.firstName + ' ' + state.lastName
+    }))
   }
 
   handlePhoneChange = phone => {
@@ -45,10 +51,13 @@ export default class AddContactForm extends React.Component {
   }
 
   validateForm = () => {
-    if (+this.state.phone >= 0 && this.state.phone.length === 10 && this.state.name.length >= 3) {
+    const validPhone = +this.state.phone >= 0 && this.state.phone.length === 10
+    const validName = this.state.firstName.length > 0 && this.state.lastName.length > 0
+    if (validPhone && validName) {
       this.setState({isFormValid: true})
+    } else {
+      this.setState({isFormValid: false})
     }
-    this.setState({isFormValid: false})
   }
 
   handleOnSubmit = () => {
@@ -60,9 +69,15 @@ export default class AddContactForm extends React.Component {
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <TextInput
           style={styles.input}
-          value={this.state.name}
-          onChangeText={this.handleNameChange}
-          placeholder="Name"
+          value={this.state.firstName}
+          onChangeText={this.onNameChange('firstName')}
+          placeholder="First Name"
+        />
+        <TextInput
+          style={styles.input}
+          value={this.state.lastName}
+          onChangeText={this.onNameChange('lastName')}
+          placeholder="Last Name"
         />
         <TextInput
           keyboardType="numeric"
@@ -71,8 +86,12 @@ export default class AddContactForm extends React.Component {
           onChangeText={this.handlePhoneChange}
           placeholder="Phone"
         />
-        <Button title="Submit" onPress="handleOnSubmit" disabled={!this.state.isFormValid} />
+        <Button title="Submit" onPress={this.handleOnSubmit} disabled={!this.state.isFormValid} />
       </KeyboardAvoidingView>
     )
   }
+}
+
+AddContactForm.propTypes = {
+  onSubmit: PropTypes.func
 }
