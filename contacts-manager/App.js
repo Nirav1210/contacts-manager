@@ -1,53 +1,73 @@
+import 'react-native-gesture-handler';
 import React from 'react';
-import { Button, FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Constants from 'expo-constants'
 
 import contacts, {compareNames} from './contacts'
-import ScrollViewContacts from './ScrollViewContacts'
-import FlatListContacts from './FlatListContacts'
-import SectionListContacts from './SectionListContacts'
-import AddContactForm from './AddContactForm'
+
+import AddContactScreen from './screens/AddContactScreen'
+import ContactListScreen from './screens/ContactListScreen'
+import ContactDetailsScreen from './screens/ContactDetailsScreen'
+
+const Stack = createStackNavigator();
 
 export default class App extends React.Component {
   state = {
-    showContacts: true,
-    showForm: false,
     contacts: contacts,
   }
 
-  toggleContacts = () => {
-    this.setState(prevState => ({showContacts: !prevState.showContacts}))
-  }
-
-  sort = () => {
-    this.setState(prevState => ({contacts: prevState.contacts.sort(compareNames)}))
-  }
-
-  showForm = () => {
-    this.setState({showForm: true})
-  }
-
-  addContact = newContact => {
+  saveContact = newContact => {
     this.setState(prevState => ({contacts: [...prevState.contacts, newContact]}))
-    this.setState({showForm: false})
   }
 
   render() {
-    if (this.state.showForm) return <AddContactForm onSubmit={this.addContact} />
     return (
-      <View style={styles.container}>
-        <Button title="toggle contacts" onPress={this.toggleContacts} />
-        <Button title="add contact" onPress={this.showForm} />
-        {this.state.showContacts && <SectionListContacts contacts={this.state.contacts} />}
-      </View>
+      // <AppNavigator 
+      //   screenProps={{
+      //     contacts: this.state.contacts,
+      //     addContact: this.addContact,
+      //   }}
+      // />
+      <NavigationContainer>
+        <Stack.Navigator 
+          initialRouteName="ContactList" 
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#f4511e',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        >
+          <Stack.Screen 
+            name="AddContact"
+            component={AddContactScreen}
+            options={{ title: 'Add Contact' }}
+          />
+          <Stack.Screen 
+            name="ContactList"
+            component={ContactListScreen}
+            initialParams={{ contacts: this.state.contacts }}
+            options={({ navigation, route }) => ({
+              title: 'Contacts',
+              headerRight: () => (
+                <Button title="Add"  onPress={() => navigation.navigate('AddContact', {
+                  addContact: this.saveContact
+                })} />
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="ContactDetails"
+            component={ContactDetailsScreen}
+            options={{ title: 'Contact Details' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: Constants.statusBarHeight,
-  },
-});
