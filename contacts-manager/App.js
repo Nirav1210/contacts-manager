@@ -14,22 +14,16 @@ import ContactDetailsScreen from './screens/ContactDetailsScreen'
 const Stack = createStackNavigator();
 
 export default class App extends React.Component {
-  state = {
-    contacts: contacts,
-  }
+  // state = {
+  //   contacts: contacts,
+  // }
 
-  saveContact = newContact => {
-    this.setState(prevState => ({contacts: [...prevState.contacts, newContact]}))
-  }
+  // saveContact = newContact => {
+  //   this.setState(prevState => ({contacts: [...prevState.contacts, newContact]}))
+  // }
 
   render() {
     return (
-      // <AppNavigator 
-      //   screenProps={{
-      //     contacts: this.state.contacts,
-      //     addContact: this.addContact,
-      //   }}
-      // />
       <NavigationContainer>
         <Stack.Navigator 
           initialRouteName="ContactList" 
@@ -51,13 +45,10 @@ export default class App extends React.Component {
           <Stack.Screen 
             name="ContactList"
             component={ContactListScreen}
-            initialParams={{ contacts: this.state.contacts }}
             options={({ navigation, route }) => ({
               title: 'Contacts',
               headerRight: () => (
-                <Button title="Add"  onPress={() => navigation.navigate('AddContact', {
-                  addContact: this.saveContact
-                })} />
+                <Button title="Add"  onPress={() => navigation.navigate('AddContact')} />
               ),
             })}
           />
