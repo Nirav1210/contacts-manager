@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
 
 const Row = props => (
   <TouchableOpacity style={styles.row} onPress={() => {
-    // this.props.onSelectContact(props);
+    props.onSelectContact(props)
   }}>
     <Text>{props.name}</Text>
     <Text>{props.phone}</Text>

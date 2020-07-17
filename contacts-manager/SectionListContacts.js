@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import Row from './Row'
 
-const renderItem = ({item}) => <Row {...item} />
+// const renderItem = ({item}) => <Row {...item} onSelectContact={props.onSelectContact} />
 
 const renderSectionHeader = ({section}) => <Text>{section.title}</Text>
 
@@ -22,7 +22,7 @@ const SectionListContacts = props => {
     title: letter,
   }))
 
-  return <SectionList sections={sections} renderItem={renderItem} renderSectionHeader={renderSectionHeader} />
+  return <SectionList sections={sections} renderItem={({ item }) => <Row {...item} onSelectContact={props.onSelectContact} /> } renderSectionHeader={renderSectionHeader} />
 }
 
 SectionListContacts.propTypes = {

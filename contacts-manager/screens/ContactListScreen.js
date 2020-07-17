@@ -21,7 +21,7 @@ export default function ContactListScreen({route, navigation}) {
         <View style={styles.container}>
         <SectionListContacts
             contacts={contacts} 
-            // onSelectContact={() => {}}
+            onSelectContact={(contact) => navigation.push('ContactDetails', contact)}
         />
         </View>
     );

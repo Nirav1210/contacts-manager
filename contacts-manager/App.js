@@ -48,7 +48,7 @@ export default class App extends React.Component {
             options={({ navigation, route }) => ({
               title: 'Contacts',
               headerRight: () => (
-                <Button title="Add"  onPress={() => navigation.navigate('AddContact')} />
+                <Button title="Add" onPress={() => navigation.navigate('AddContact')} />
               ),
             })}
           />
