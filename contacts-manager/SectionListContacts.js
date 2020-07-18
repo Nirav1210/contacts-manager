@@ -9,6 +9,7 @@ import Row from './Row'
 const renderSectionHeader = ({section}) => <Text>{section.title}</Text>
 
 const SectionListContacts = props => {
+  if (Object.keys(props.contacts).length === 0) return [];
   const contactsByLetter = props.contacts.reduce((obj, contact) => {
     const firstLetter = contact.name[0].toUpperCase()
     return {

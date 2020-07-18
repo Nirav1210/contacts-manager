@@ -1,17 +1,19 @@
 import React from 'react'
 import {Button, View, StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
+import { connect } from 'react-redux'
 
-import contactsList, {compareNames} from '../contacts'
+// import contactsList, {compareNames} from '../contacts'
 import SectionListContacts from '../SectionListContacts'
 
-export default function ContactListScreen({route, navigation}) {
-    const [contacts, setContacts] = React.useState(contactsList)
+function ContactListScreen({route, navigation}) {
+    const [contacts, setContacts] = React.useState([])
 
     React.useEffect(() => {
         if (route.params?.contact) {
             const { contact } = route.params;
             setContacts(prevState => {
+                if (Object.keys(prevState).length === 0) return [contact];
                 return [...prevState, contact]
             });
         }
@@ -34,3 +36,9 @@ const styles = StyleSheet.create({
       paddingTop: Constants.statusBarHeight,
     },
 });
+
+const mapStateToProps = state => ({
+    contacts: state.contacts,
+})
+  
+export default connect(mapStateToProps)(ContactListScreen)
